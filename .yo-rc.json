@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "18.20.0",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.24.0"
+    },
+    "version": "1.20.0",
+    "libraryName": "spfxtraining",
+    "libraryId": "2eca69c8-bce4-4497-af63-70cdf18ad7f6",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "Spfxtraining",
+    "solutionShortDescription": "Spfxtraining description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
