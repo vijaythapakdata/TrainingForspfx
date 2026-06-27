@@ -22,7 +22,11 @@ const result=await list.items.add({
     Permission:FormData.Permission,
     Address:FormData.Address,
     AdminId:FormData.AdminId,
-    ManagerId:{results:FormData.ManagerId}
+    ManagerId:{results:FormData.ManagerId},
+    Gender:FormData.Gender,
+    Department:FormData.Department,
+    CityId:FormData.City,
+    Skills:{results:FormData.Skills}
 })
 return result;
     }

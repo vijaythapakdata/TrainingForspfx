@@ -24,5 +24,9 @@ export interface ISharePointFormColumns{
     AdminId:any;
     Admin:string|any;
     Manager:any[];
-    ManagerId:any[]
+    ManagerId:any[];
+    Gender?:string;
+    Department?:string;
+    City?:any;
+    Skills:any[]
 }

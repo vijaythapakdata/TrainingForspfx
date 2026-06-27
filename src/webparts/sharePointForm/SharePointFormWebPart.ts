@@ -11,6 +11,7 @@ import {sp} from "@pnp/sp/presets/all";
 import * as strings from 'SharePointFormWebPartStrings';
 import SharePointForm from './components/SharePointForm';
 import { ISharePointFormProps } from './components/ISharePointFormProps';
+import ChoiceFieldsClass from '../../api/services/ChoiceServiceApi';
 
 export interface ISharePointFormWebPartProps {
   description: string;
@@ -18,8 +19,10 @@ export interface ISharePointFormWebPartProps {
 
 export default class SharePointFormWebPart extends BaseClientSideWebPart<ISharePointFormWebPartProps> {
 
- 
-  protected onInit(): Promise<void> {
+ private choicesOptions:ChoiceFieldsClass|undefined;
+
+  protected async onInit(): Promise<void> {
+    this.choicesOptions=new ChoiceFieldsClass(this.context);
     return super.onInit().then(_=> {
      sp.setup({
       spfxContext:this.context as any
@@ -27,12 +30,16 @@ export default class SharePointFormWebPart extends BaseClientSideWebPart<IShareP
     });
   }
 
-  public render(): void {
+  public async render(): Promise<void> {
     const element: React.ReactElement<ISharePointFormProps> = React.createElement(
       SharePointForm,
       {
         context:this.context,
-        siteurl:this.context.pageContext.web.absoluteUrl
+        siteurl:this.context.pageContext.web.absoluteUrl,
+        singleselecteddropdown:await this.choicesOptions?.getChoiceValues(this.context.pageContext.web.absoluteUrl,"Department"),
+      radiooption:await this.choicesOptions?.getChoiceValues(this.context.pageContext.web.absoluteUrl,"Gender"),
+      multiselectdropdown:await this.choicesOptions?.getChoiceValues(this.context.pageContext.web.absoluteUrl,"Skills"),
+      lookupval:await this.choicesOptions?.getLookupValues()
       }
     );
 

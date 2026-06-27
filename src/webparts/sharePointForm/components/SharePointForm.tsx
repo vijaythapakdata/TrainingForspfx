@@ -5,9 +5,10 @@ import type { ISharePointFormProps } from './ISharePointFormProps';
 import { SharePointFormServiceClass } from '../../../api/services/SharepointFormService';
 import { ISharePointFormColumns } from '../../../models/ISharePointListColumns';
 import { Dialog } from '@microsoft/sp-dialog';
-import { PrimaryButton, Slider, TextField, Toggle } from '@fluentui/react';
+import { ChoiceGroup, Dropdown, PrimaryButton, Slider, TextField, Toggle } from '@fluentui/react';
 import {  PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { handleMultiSelectedPeoplePicker, handleSingleSelectedPeoplePicker } from '../../../models/PeoplePickerHandler';
+import { handleSkillsChange } from '../../../models/MultiselectDropdownModel';
 const SharePointForm:React.FC<ISharePointFormProps>=(props)=>{
   const [formdata,setFormdata]=React.useState<ISharePointFormColumns>({
     Name:"",
@@ -20,7 +21,11 @@ const SharePointForm:React.FC<ISharePointFormProps>=(props)=>{
     Manager:[],
     ManagerId:[],
     Admin:"",
-    AdminId:0
+    AdminId:0,
+    Skills:[],
+    Department:"",
+    City:"",
+    Gender:""
   });
 
   const addItems=async()=>{
@@ -40,7 +45,11 @@ setFormdata({
      Manager:[],
     ManagerId:[],
     Admin:"",
-    AdminId:0
+    AdminId:0,
+    Skills:[],
+    Department:"",
+    City:"",
+    Gender:""
 })
 //I am master
     }
@@ -113,6 +122,39 @@ ensureUser={true}
     principalTypes={[PrincipalType.User]}
     resolveDelay={1000}
     webAbsoluteUrl={props.siteurl} />
+    {/* Department */}
+    <Dropdown
+    label='Department'
+    placeholder='--select--'
+    options={props.singleselecteddropdown}
+    selectedKey={formdata.Department}
+    onChange={(_,options)=>handleChange("Department",options?.key as string)}
+    />
+    {/* City */}
+    <Dropdown
+    label='City'
+    placeholder='--select--'
+    options={props.lookupval}
+    selectedKey={formdata.City}
+    onChange={(_,options)=>handleChange("City",options?.key as string)}
+    />
+    {/* Raido Button -Gender */}
+
+    <ChoiceGroup
+    label='Gender'
+    options={props.radiooption}
+     selectedKey={formdata.Gender}
+    onChange={(_,options)=>handleChange("Gender",options?.key as string)}
+    />
+    {/* multiselecy */}
+     <Dropdown
+    label='Skills'
+    placeholder='--select--'
+    options={props.multiselectdropdown}
+    defaultSelectedKeys={formdata.Skills}
+    multiSelect
+    onChange={(_,opt)=>handleSkillsChange(opt!,formdata,setFormdata)}
+    />
           <TextField
            label="Address"
            value={formdata.Address}
