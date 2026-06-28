@@ -26,7 +26,8 @@ const result=await list.items.add({
     Gender:FormData.Gender,
     Department:FormData.Department,
     CityId:FormData.City,
-    Skills:{results:FormData.Skills}
+    Skills:{results:FormData.Skills},
+    DOB:new Date(FormData.DOB)
 })
 return result;
     }
@@ -38,5 +39,13 @@ console.log(`Error while creating the items`,err);
 console.log(`I am free will`);
     }
 }
+//atachment
 
+public async uploadAttachment(itemsId:number,Attachments:File[]):Promise<void>{
+    if(!Attachments||Attachments.length===0) return;
+    const list =this.web.lists.getByTitle(ListNames.FirstList);
+    for (const file of Attachments){
+        await list.items.getById(itemsId).attachmentFiles.add(file.name,file);
+    }
+}
 }

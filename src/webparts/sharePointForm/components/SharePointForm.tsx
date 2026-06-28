@@ -5,10 +5,13 @@ import type { ISharePointFormProps } from './ISharePointFormProps';
 import { SharePointFormServiceClass } from '../../../api/services/SharepointFormService';
 import { ISharePointFormColumns } from '../../../models/ISharePointListColumns';
 import { Dialog } from '@microsoft/sp-dialog';
-import { ChoiceGroup, Dropdown, PrimaryButton, Slider, TextField, Toggle } from '@fluentui/react';
+import { ChoiceGroup, DatePicker, Dropdown, Label, PrimaryButton, Slider, TextField, Toggle } from '@fluentui/react';
 import {  PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { handleMultiSelectedPeoplePicker, handleSingleSelectedPeoplePicker } from '../../../models/PeoplePickerHandler';
 import { handleSkillsChange } from '../../../models/MultiselectDropdownModel';
+import { DateFormat, DatePickerStrings } from '../../../models/DateFromatting';
+import { handleAttachment } from '../../../models/AttachmentHandler';
+// import { set } from '@microsoft/sp-lodash-subset';
 const SharePointForm:React.FC<ISharePointFormProps>=(props)=>{
   const [formdata,setFormdata]=React.useState<ISharePointFormColumns>({
     Name:"",
@@ -25,14 +28,19 @@ const SharePointForm:React.FC<ISharePointFormProps>=(props)=>{
     Skills:[],
     Department:"",
     City:"",
-    Gender:""
+    Gender:"",
+    DOB:""
   });
+
+  const [attachments,setAttachments]=React.useState<File[]>([]);
 
   const addItems=async()=>{
     try{
 const _service=new SharePointFormServiceClass(props.siteurl);
 const result =await _service.createItems(formdata);
-Dialog.alert(`Item added successfully with id ${result.data.id}`);
+const itemId=result.data.Id;
+await _service.uploadAttachment(itemId,attachments)
+Dialog.alert(`Item added successfully with id ${result.data.Id}`);
 
 setFormdata({
    Name:"",
@@ -49,8 +57,10 @@ setFormdata({
     Skills:[],
     Department:"",
     City:"",
-    Gender:""
+    Gender:"",
+    DOB:""
 })
+setAttachments([]);
 //I am master
     }
     catch(err){
@@ -154,6 +164,21 @@ ensureUser={true}
     defaultSelectedKeys={formdata.Skills}
     multiSelect
     onChange={(_,opt)=>handleSkillsChange(opt!,formdata,setFormdata)}
+    />
+    {/* DatePicker */}
+    <DatePicker
+    label='DOB'
+    strings={DatePickerStrings}
+    formatDate={DateFormat}
+    onSelectDate={(e)=>setFormdata(prev=>({...prev,DOB:e}))}
+    />
+    {/* Attachment */}
+    <Label>Attachments</Label>
+    <input
+    type="file"
+    title="Upload File"
+    multiple
+    onChange={(e)=>handleAttachment(e,setAttachments)}
     />
           <TextField
            label="Address"

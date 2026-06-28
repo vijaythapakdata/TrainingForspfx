@@ -28,5 +28,6 @@ export interface ISharePointFormColumns{
     Gender?:string;
     Department?:string;
     City?:any;
-    Skills:any[]
+    Skills:any[];
+    DOB:string|any;
 }
